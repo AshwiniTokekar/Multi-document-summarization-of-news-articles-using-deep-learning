@@ -109,16 +109,37 @@ def sent_level(line):
 					num+=1
 				if word in stopwords:
 					stop+=1	
-			avg_tf[text]=temp_tf/len(words)
-			avg_idf[text]=temp_idf/len(words)
-			avg_df[text]=temp_df/len(words)	
-			stopword_ratio[text]=stop/len(words)
-			number_ratio[text]=num/len(words)
+			avg_tf[text]=temp_tf/float(len(words))
+			avg_idf[text]=temp_idf/float(len(words))
+			avg_df[text]=temp_df/float(len(words))	
+			stopword_ratio[text]=stop/float(len(words))
+			number_ratio[text]=num/float(len(words))
 def normalize(feature):
-	max_key=max(x,key=x.get)
-	print max_key
+	max_key=max(feature,key=feature.get)
+	for k,v in feature.iteritems():
+		feature[k]=float(v)/float(feature[max_key])
+	return feature
 
 def getallfeatures(filename):
+	global tf
+	global idf
+	global df
+	global avg_tf
+	global avg_df
+	global avg_idf
+	global max_sent_len
+	global stopword_ratio
+	global number_ratio
+	global length_sent
+	global position
+	global noun
+	global adjective
+	global verb
+	global adverb
+	global sent_depth
+	global sub_sent
+	global max_sub_sent
+	global max_depth
 	reader = open(filename)
 	i=1
 	docs_lines=[]
@@ -135,7 +156,26 @@ def getallfeatures(filename):
 		sent_level(line)
 		POS_tags(line)
 		i+=1
-	normalize(tf)	
+	
+	tf=normalize(tf)
+	df=normalize(df)
+	idf=normalize(idf)
+	max_sent_len=normalize(max_sent_len)
+	avg_tf=normalize(avg_tf)
+	avg_idf=normalize(avg_idf)
+	avg_df=normalize(avg_df)
+	stopword_ratio=normalize(stopword_ratio)
+	number_ratio=normalize(number_ratio)
+	length_sent=normalize(length_sent)
+	position=normalize(position)
+	noun=normalize(noun)
+	adjective=normalize(adjective)
+	verb=normalize(verb)
+	adverb=normalize(adverb)
+	sent_depth=normalize(sent_depth)
+	sub_sent=normalize(sub_sent)
+	max_sub_sent=normalize(max_sub_sent)
+	max_depth=normalize(max_depth)	
 	
 def main():
 	print "Finding All Features"
